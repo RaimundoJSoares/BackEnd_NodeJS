@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const app = express();
 
 app.use(bodyParser.json())
@@ -11,8 +12,8 @@ app.get('/', (req, res) => {
 });
 
 const mensagens = [
-  "Essa é a primeira mensagem",
-  "Essa é a segnda mensagem"
+  'Essa é a primeira mensagem',
+  'Essa é a segnda mensagem'
 ];
 
 app.get('/mensagens',  (req, res) => {
@@ -20,15 +21,12 @@ app.get('/mensagens',  (req, res) => {
 });
 
 app.post('/mensagens', (req, res) => {
-  console.log(req.body);
-
-  const texto = req.body.texto;
   
+  const texto = req.body.texto;
+
   mensagens.push(texto);
 
-  res.send('Mensagem foi criada com sucesso')
-  res.send(mensagens);
-
+  res.send('Mensagem foi criada com sucesso');
 
 });
  
