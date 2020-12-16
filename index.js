@@ -12,18 +12,23 @@ app.get('/', (req, res) => {
 });
 
 const mensagens = [
-  'Essa é a primeira mensagem',
-  'Essa é a segunda mensagem'
+  {id:1,
+    texto :'Essa é a primeira mensagem'},
+    {id:2,
+      texto :'Essa é a segunda mensagem'},
 ];
 
 //CREATE -  cria uma mensagem
 app.post('/mensagens', (req, res) => {
-  console.log(req.body);
-  const texto = req.body.texto;
-  
-  mensagens.push(texto);
+  const mensagem = req.body; 
 
-  res.send('Mensagem foi criada com sucesso');
+  const id = mensagens.length +1;
+
+  mensagem.id = id;
+  
+  mensagens.push(mensagem);
+
+  res.send(mensagem);
 
 }); 
 
