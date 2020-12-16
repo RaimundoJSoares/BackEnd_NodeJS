@@ -27,11 +27,19 @@ app.post('/mensagens', (req, res) => {
 
 }); 
 
-//READ - Ler todas as mensagens
+//READ all -  Ler todas as mensagens
 app.get('/mensagens',  (req, res) => {
   res.send(mensagens.filter(Boolean));
 });
 
+//READ single - ler apenas 1 mensagem
+app.get('/mensagens/:id',(req, res) => {
+  const id = +req.params.id -1;
+
+  const mensagem = mensagens[id];
+   
+  res.send(mensagem);
+});
 
 //UPDATE - Editar uma mensagem
 
