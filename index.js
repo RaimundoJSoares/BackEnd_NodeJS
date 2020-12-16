@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
 
-(async () =>{
+(async () => {
 
 const connectionString = 'mongodb://localhost:27017/';
 
@@ -12,68 +12,61 @@ const client = await mongodb.MongoClient.connect(connectionString, {
   useUnifiedTopology : true
 });
 
-console.log(client);
-
 const app = express();
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-const port = 3000;
- 
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-const db = client.db('banco_de_dados');
+const db = client.db('Bancodedados');
  
 const mensagens = db.collection('mensagens');
  
-
 //CREATE -  cria uma mensagem
-app.post('/mensagens', (req, res) => {
+app.post('/mensagens', async (req, res) => {
   const mensagem = req.body; 
-
-  const id = mensagens.length +1;
-
-  mensagem.id = id;
   
-  mensagens.push(mensagem);
+  await mensagens.insertOne(mensagem);
 
   res.send(mensagem);
 
 }); 
 
 //READ all -  Ler todas as mensagens
-app.get('/mensagens',  (req, res) => {
-  res.send(mensagens.filter(Boolean));
+app.get('/mensagens', async (req, res) => {
+  res.send(await mensagens.find().toArray());
 });
 
 //READ single - ler apenas 1 mensagem
-app.get('/mensagens/:id',(req, res) => {
-  const id = +req.params.id -1;
+app.get('/mensagens/:id',async(req, res) => {
+  const id = req.params.id;
 
-  const mensagem = mensagens[id];
-   
-  res.send(mensagem);
+  res.send(await mensagens.findOne({_id:mongodb.ObjectId(id) }));
+
 });
 
 //UPDATE - Editar uma mensagem
 
 app.put('/mensagens/:id', (req, res) => {
-  const id = +req.params.id - 1;
+  const id = req.params.id;
 
   const novoTexto = req.body.texto;
 
-  mensagens[id].texto = novoTexto;
+ mensagens.updateOne(
+   { _id: mongodb.ObjectId(id)},
+   {$set: {texto: novoTexto}}
+ )
 
   res.send(mensagens[id]);
 });
 
-app.delete('/mensagens/:id', (req, res) => {
+app.delete('/mensagens/:id', async (req, res) => {
 
-  const id = +req.params.id -1; ///transforma string em numero para somar com 1 depois
+  const id = req.params.id; ///transforma string em numero para somar com 1 depois
 
-  delete mensagens[id];
+  await mensagens.deleteOne({_id: mongodb.ObjectId(id) });
   
   res.send('Mensagem excluida com sucesso!');
 
