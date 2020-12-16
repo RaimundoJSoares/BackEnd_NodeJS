@@ -17,7 +17,7 @@ const mensagens = [
 ];
 
 app.get('/mensagens',  (req, res) => {
-  res.send(mensagens);
+  res.send(mensagens.filter(Boolean));
 });
 
 app.post('/mensagens', (req, res) => {
@@ -27,6 +27,28 @@ app.post('/mensagens', (req, res) => {
   mensagens.push(texto);
 
   res.send('Mensagem foi criada com sucesso');
+
+});
+
+//UPDATE - Editar uma mensagem
+
+app.put('/mensagens/:id', (req, res) => {
+  const id = +req.params.id - 1;
+
+  const novoTexto = req.body.texto;
+
+  mensagens[id] = novoTexto;
+
+  res.send('Mensagem editada com sucesso')
+});
+
+app.delete('/mensagens/:id', (req, res) => {
+
+  const id = +req.params.id -1; ///transforma string em numero para somar com 1 depois
+
+  delete mensagens[id];
+  
+  res.send('Mensagem excluida com sucesso!');
 
 });
  
