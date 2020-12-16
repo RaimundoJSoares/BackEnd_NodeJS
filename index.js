@@ -1,5 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongodb = require('mongodb');
+
+(async () =>{
+
+const connectionString = 'mongodb://localhost:27017/';
+
+console.info('Conectando ao banco de dados...');
+
+const client = await mongodb.MongoClient.connect(connectionString, {
+  useUnifiedTopology : true
+});
+
+console.log(client);
 
 const app = express();
 
@@ -11,12 +24,10 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-const mensagens = [
-  {id:1,
-    texto :'Essa é a primeira mensagem'},
-    {id:2,
-      texto :'Essa é a segunda mensagem'},
-];
+const db = client.db('banco_de_dados');
+ 
+const mensagens = db.collection('mensagens');
+ 
 
 //CREATE -  cria uma mensagem
 app.post('/mensagens', (req, res) => {
@@ -71,3 +82,4 @@ app.delete('/mensagens/:id', (req, res) => {
 app.listen(3000, () => {
   console.info('App rodando em  http://localhost:3000.');
 }) ;
+})();
