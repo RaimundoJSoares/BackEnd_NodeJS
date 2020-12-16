@@ -53,9 +53,9 @@ app.put('/mensagens/:id', (req, res) => {
 
   const novoTexto = req.body.texto;
 
-  mensagens[id] = novoTexto;
+  mensagens[id].texto = novoTexto;
 
-  res.send('Mensagem editada com sucesso')
+  res.send(mensagens[id]);
 });
 
 app.delete('/mensagens/:id', (req, res) => {
